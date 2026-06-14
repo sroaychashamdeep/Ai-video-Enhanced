@@ -1,0 +1,9 @@
+/* Clear default Vite styles that conflict with our new design */
+body {
+  margin: 0;
+}
+#root {
+  width: 100%;
+  display: flex;
+  min-height: 100vh;
+}

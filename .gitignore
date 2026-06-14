@@ -1,0 +1,27 @@
+# Node
+node_modules/
+dist/
+build/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.env
+
+# Uploads & Outputs
+backend/uploads/*
+!backend/uploads/.gitkeep
+ai_service/output/*
+!ai_service/output/.gitkeep
+ai_service/temp_processing/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database
+backend/data/users.json
