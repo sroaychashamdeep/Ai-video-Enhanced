@@ -12,7 +12,7 @@ axiosClient.interceptors.request.use((config) => {
   return config;
 });
 
-export const uploadVideo = async (file, quality, onUploadProgress) => {
+export const uploadVideo = async (file, quality) => {
   const formData = new FormData();
   formData.append('video', file);
   formData.append('quality', quality);
@@ -21,12 +21,20 @@ export const uploadVideo = async (file, quality, onUploadProgress) => {
     const response = await axiosClient.post('/video/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-      },
-      onUploadProgress,
+      }
     });
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Upload failed');
+  }
+};
+
+export const getJobStatus = async (jobId) => {
+  try {
+    const response = await axiosClient.get(`/video/status/${jobId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to fetch job status');
   }
 };
 

@@ -1,22 +1,39 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { motion } from 'framer-motion';
+import { Activity, Bell, Settings, Video } from 'lucide-react';
 import UploadArea from '../components/UploadArea';
+import AISettingsPanel from '../components/AISettingsPanel';
 import ProgressIndicator from '../components/ProgressIndicator';
 import VideoPreview from '../components/VideoPreview';
-import { uploadVideo } from '../api/axiosClient';
+import { uploadVideo, getJobStatus } from '../api/axiosClient';
 
 const Dashboard = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [file, setFile] = useState(null);
-  const [quality, setQuality] = useState('standard');
   const [enhancedFileName, setEnhancedFileName] = useState(null);
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [videoMeta, setVideoMeta] = useState(null);
+
+  // Advanced AI Settings
+  const [aiSettings, setAiSettings] = useState({
+    upscale: '4x',
+    mode: 'standard',
+    features: {
+      faceRestoration: true,
+      denoising: true,
+      interpolation: false,
+      color: false,
+      sharpen: false,
+      stabilization: false
+    }
+  });
 
   const handleLogout = () => {
     logout();
@@ -26,96 +43,174 @@ const Dashboard = () => {
   const handleFileSelect = (selectedFile) => {
     setFile(selectedFile);
     setProgress(0);
-    setStatus('Ready when you are! ✨');
+    setStatus('Ready for enhancement');
     setUploadSuccess(false);
     setEnhancedFileName(null);
+    setVideoMeta(null);
   };
 
   const handleUpload = async () => {
     if (!file) return;
 
     setIsUploading(true);
-    setStatus('Sending to the AI lab... 🚀');
+    setStatus('Initializing Pipeline');
+    setProgress(0);
 
     try {
-      const response = await uploadVideo(file, quality, (progressEvent) => {
-        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-        setProgress(percentCompleted);
-      });
+      const payloadString = JSON.stringify(aiSettings);
+      
+      const response = await uploadVideo(file, payloadString);
+      const jobId = response.jobId;
 
-      setStatus('Got it! Our AI is working its magic right now 🪄');
-      setUploadSuccess(true);
-      setEnhancedFileName(response.enhancedFile);
+      const pollInterval = setInterval(async () => {
+        try {
+          const statusRes = await getJobStatus(jobId);
+          setProgress(statusRes.progress);
+          setStatus(statusRes.status);
+          
+          // If metadata hasn't been set yet, set it when available
+          if (statusRes.metadata && !videoMeta) {
+            setVideoMeta(statusRes.metadata);
+          }
+
+          if (statusRes.completed) {
+            clearInterval(pollInterval);
+            setProgress(100);
+            setStatus('Processing Complete');
+            setUploadSuccess(true);
+            setEnhancedFileName(statusRes.enhancedFile);
+          } else if (statusRes.error) {
+            clearInterval(pollInterval);
+            setStatus('Processing Failed');
+            setIsUploading(false);
+          }
+        } catch (e) {
+          console.error("Polling error:", e);
+          clearInterval(pollInterval);
+          setStatus('Pipeline Disconnected (Please try again)');
+          setIsUploading(false);
+        }
+      }, 1000);
+      
     } catch (error) {
       console.error('Error uploading file:', error);
-      setStatus("Oops! Something went wrong on our end. Let's try that again 😅");
-    } finally {
+      setStatus('Upload Failed');
       setIsUploading(false);
     }
   };
 
   return (
     <div className="app-container">
-      <header className="app-header dashboard-header">
-        <div>
-          <h1 className="gradient-text">Smart Video Enhancer</h1>
-          <p className="app-subtitle">Hey {user?.name}, let's make some magic happen ✨</p>
+      {/* Top Navigation */}
+      <nav className="top-nav">
+        <div className="nav-brand">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+          <span style={{fontWeight: 700, letterSpacing: '0.5px'}}>SmartVideo AI</span>
         </div>
-        <div style={{display: 'flex', gap: '1rem', alignItems: 'center'}}>
-          <button onClick={() => navigate('/history')} className="btn-logout" style={{border: 'none', fontWeight: 'bold'}}>My History</button>
-          <button onClick={handleLogout} className="btn-logout">Logout</button>
+        
+        <div className="nav-links">
+          <button className="nav-link active"><Video size={18}/> Studio</button>
+          <button className="nav-link" onClick={() => navigate('/history')}><Activity size={18}/> History</button>
+          <button className="nav-link" onClick={() => navigate('/analytics')}><Settings size={18}/> Analytics</button>
         </div>
-      </header>
+        
+        <div className="nav-user">
+          <div className="notification-bell">
+            <Bell size={20} />
+            <span className="notification-dot"></span>
+          </div>
+          <div className="user-avatar" title="Logout" onClick={handleLogout} style={{cursor: 'pointer'}}>
+            {user?.name?.charAt(0).toUpperCase() || 'U'}
+          </div>
+        </div>
+      </nav>
 
-      <main className="app-main">
-        <div className="upload-section">
-          <UploadArea onFileSelect={handleFileSelect} />
-          
-          {file && (
-            <div className="file-actions">
-              <div className="selected-file-info">
-                <span className="file-name">{file.name}</span>
-                <span className="file-size">{(file.size / (1024 * 1024)).toFixed(2)} MB</span>
-              </div>
-              
-              {!uploadSuccess && (
-                <div className="upload-controls">
-                  <div className="quality-selector">
-                    <label>Quality:</label>
-                    <select 
-                      value={quality} 
-                      onChange={(e) => setQuality(e.target.value)}
-                      disabled={isUploading}
-                      className="quality-dropdown"
-                    >
-                      <option value="fast">Fast (2x Scale)</option>
-                      <option value="standard">Standard (4x Scale)</option>
-                      <option value="pro">Pro (AI Restoration)</option>
-                    </select>
-                  </div>
+      {/* Hero Section */}
+      <section className="hero-section">
+        <motion.div 
+          className="hero-badge"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <span className="live-dot"></span> Production Cluster Online
+        </motion.div>
+        
+        <motion.h1 
+          className="gradient-text hero-title"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          Transform Low-Quality Videos Into<br/>Stunning 4K & 8K Masterpieces
+        </motion.h1>
+        
+        <motion.p 
+          className="app-subtitle"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+        >
+          Powered by Real-ESRGAN, GFPGAN, and Advanced AI Video Restoration.
+        </motion.p>
+        
+        <motion.div 
+          className="resolution-showcase"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3 }}
+        >
+          <span className="res-pill dim">480p</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <span className="res-pill">1080p</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <span className="res-pill glow">4K</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-secondary)"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <span className="res-pill super-glow">8K</span>
+        </motion.div>
+      </section>
 
-                  <button 
-                    className="btn-upload" 
-                    onClick={handleUpload} 
-                    disabled={isUploading}
-                  >
-                    {isUploading ? 'Uploading...' : 'Make it Awesome! ✨'}
-                  </button>
-                </div>
-              )}
+      {/* Main Content Layout */}
+      <main className="app-main dashboard-grid">
+        <div className="left-column">
+          <div className="upload-card">
+            <UploadArea onFileSelect={handleFileSelect} />
+            
+            {file && !uploadSuccess && (
+              <motion.button 
+                className="btn-upload btn-massive" 
+                onClick={handleUpload} 
+                disabled={isUploading}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                {isUploading ? 'Initializing Neural Engine...' : 'Enhance Video Now'}
+              </motion.button>
+            )}
+
+            {(isUploading || status) && file && (
+              <ProgressIndicator progress={progress} status={status} file={file} aiSettings={aiSettings} />
+            )}
+          </div>
+        </div>
+
+        <div className="right-column">
+          {file && !uploadSuccess ? (
+            <AISettingsPanel 
+              settings={aiSettings} 
+              setSettings={setAiSettings} 
+              isProcessing={isUploading} 
+            />
+          ) : file && uploadSuccess && enhancedFileName ? (
+            <VideoPreview file={file} enhancedFileName={enhancedFileName} settings={aiSettings} metadata={videoMeta} />
+          ) : (
+            <div className="empty-state-panel">
+              <Activity size={48} strokeWidth={1} color="var(--surface-border)" />
+              <p>Select a video to access AI Settings and Preview</p>
             </div>
           )}
-
-          {(isUploading || status) && (
-            <ProgressIndicator progress={progress} status={status} />
-          )}
         </div>
-
-        {file && (
-          <div className="preview-section">
-            <VideoPreview file={file} enhancedFileName={enhancedFileName} />
-          </div>
-        )}
       </main>
     </div>
   );

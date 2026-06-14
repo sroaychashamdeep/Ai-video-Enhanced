@@ -40,14 +40,22 @@ const UploadArea = ({ onFileSelect }) => {
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
+      onClick={() => document.getElementById('video-upload').click()}
     >
-      <div className="upload-icon-container">
+      <div className="upload-icon-wrapper">
         <svg className="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
         </svg>
       </div>
-      <h3 className="upload-title">Toss your video right here! 🎥</h3>
-      <p className="upload-subtitle">or click to pick one from your files</p>
+      <h3 className="upload-title">Drag & Drop Video File</h3>
+      <p className="upload-subtitle">or click to browse from your computer</p>
+      
+      <div className="upload-specs">
+        <span>Supported: MP4, MOV, AVI</span>
+        <span>•</span>
+        <span>Max Size: 500MB</span>
+      </div>
+
       <input
         type="file"
         accept="video/*"
@@ -55,9 +63,6 @@ const UploadArea = ({ onFileSelect }) => {
         className="file-input"
         id="video-upload"
       />
-      <label htmlFor="video-upload" className="upload-button">
-        Choose a Video
-      </label>
     </div>
   );
 };
