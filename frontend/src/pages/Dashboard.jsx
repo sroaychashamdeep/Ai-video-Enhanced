@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { motion } from 'framer-motion';
@@ -7,7 +7,8 @@ import UploadArea from '../components/UploadArea';
 import AISettingsPanel from '../components/AISettingsPanel';
 import ProgressIndicator from '../components/ProgressIndicator';
 import VideoPreview from '../components/VideoPreview';
-import { uploadVideo, getJobStatus } from '../api/axiosClient';
+import { uploadVideo } from '../api/axiosClient';
+import { socket, connectSocket, disconnectSocket, subscribeToJob } from '../api/socket';
 
 const Dashboard = () => {
   const { user, logout } = useContext(AuthContext);
@@ -35,6 +36,41 @@ const Dashboard = () => {
     }
   });
 
+  useEffect(() => {
+    connectSocket();
+
+    socket.on('progressUpdate', (data) => {
+      setProgress(data.progress);
+      
+      let stage = 'AI Processing';
+      if (data.progress < 15) stage = 'Frame Extraction';
+      else if (data.progress < 45) stage = 'Real-ESRGAN Processing';
+      else if (data.progress < 65) stage = 'GFPGAN Face Restoration';
+      else if (data.progress < 85) stage = 'Frame Reconstruction';
+      else if (data.progress < 100) stage = 'Video Rendering';
+      
+      setStatus(stage);
+    });
+
+    socket.on('jobCompleted', () => {
+      setProgress(100);
+      setStatus('Processing Complete');
+      setUploadSuccess(true);
+    });
+
+    socket.on('jobFailed', (data) => {
+      setStatus('Pipeline Failed: ' + (data.error || 'Unknown Error'));
+      setIsUploading(false);
+    });
+
+    return () => {
+      socket.off('progressUpdate');
+      socket.off('jobCompleted');
+      socket.off('jobFailed');
+      disconnectSocket();
+    };
+  }, []);
+
   const handleLogout = () => {
     logout();
     navigate('/login');
@@ -60,41 +96,18 @@ const Dashboard = () => {
       const payloadString = JSON.stringify(aiSettings);
       
       const response = await uploadVideo(file, payloadString);
-      const jobId = response.jobId;
-
-      const pollInterval = setInterval(async () => {
-        try {
-          const statusRes = await getJobStatus(jobId);
-          setProgress(statusRes.progress);
-          setStatus(statusRes.status);
-          
-          // If metadata hasn't been set yet, set it when available
-          if (statusRes.metadata && !videoMeta) {
-            setVideoMeta(statusRes.metadata);
-          }
-
-          if (statusRes.completed) {
-            clearInterval(pollInterval);
-            setProgress(100);
-            setStatus('Processing Complete');
-            setUploadSuccess(true);
-            setEnhancedFileName(statusRes.enhancedFile);
-          } else if (statusRes.error) {
-            clearInterval(pollInterval);
-            setStatus('Processing Failed');
-            setIsUploading(false);
-          }
-        } catch (e) {
-          console.error("Polling error:", e);
-          clearInterval(pollInterval);
-          setStatus('Pipeline Disconnected (Please try again)');
-          setIsUploading(false);
-        }
-      }, 1000);
       
+      if (response.jobId) {
+        subscribeToJob(response.jobId);
+        if (response.metadata) setVideoMeta(response.metadata);
+        if (response.enhancedFile) setEnhancedFileName(response.enhancedFile);
+      } else {
+        throw new Error("No job ID returned");
+      }
+
     } catch (error) {
-      console.error('Error uploading file:', error);
-      setStatus('Upload Failed');
+      console.error('Upload Error:', error);
+      setStatus('Upload Failed - Please try again');
       setIsUploading(false);
     }
   };

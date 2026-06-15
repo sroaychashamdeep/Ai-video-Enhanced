@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Maximize, Play, Pause, Download } from 'lucide-react';
+import ReportGenerator from './ReportGenerator';
 
 const VideoPreview = ({ file, enhancedFileName, settings, metadata }) => {
   const [videoUrl, setVideoUrl] = useState(null);
@@ -158,9 +159,12 @@ const VideoPreview = ({ file, enhancedFileName, settings, metadata }) => {
               {faceRec > 0 && <span className="metric-badge">🤖 Face Recovery +{faceRec}%</span>}
               {noiseRed > 0 && <span className="metric-badge">🧹 Noise Reduction +{noiseRed}%</span>}
             </div>
-            <button className="btn-upload" onClick={handleDownload} style={{display: 'flex', gap: '0.5rem', alignItems: 'center', padding: '0.5rem 1rem'}}>
-              <Download size={18}/> Download {settings?.upscale?.toUpperCase()}
-            </button>
+            <div style={{display: 'flex', gap: '0.5rem'}}>
+              <ReportGenerator videoData={{ originalName: file?.name, metadata, qualitySettings: settings }} metrics={{ sharpnessImprovement: sharpness, noiseReduction: noiseRed, overallQualityScore: Math.round((sharpness+noiseRed+faceRec)/3) || 85 }} />
+              <button className="btn-upload mt-4" onClick={handleDownload} style={{display: 'flex', gap: '0.5rem', alignItems: 'center', padding: '0.5rem 1rem'}}>
+                <Download size={18}/> Download {settings?.upscale?.toUpperCase()}
+              </button>
+            </div>
           </div>
 
           {/* Video Metadata Card */}

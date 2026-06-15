@@ -134,16 +134,26 @@ const History = () => {
                       {new Date(video.date).toLocaleDateString(undefined, {month: 'short', day: 'numeric', year: 'numeric'})}
                     </td>
                     <td style={{padding: '1.25rem 2rem'}}>
-                      <span className="res-pill glow" style={{fontSize: '0.75rem', padding: '0.25rem 0.75rem'}}>Completed</span>
+                      {video.status === 'Processing Complete' ? (
+                        <span className="res-pill glow" style={{fontSize: '0.75rem', padding: '0.25rem 0.75rem'}}>Completed</span>
+                      ) : video.status === 'Failed' ? (
+                        <span className="res-pill" style={{fontSize: '0.75rem', padding: '0.25rem 0.75rem', borderColor: 'var(--accent-primary)', color: 'var(--accent-primary)'}}>Failed</span>
+                      ) : (
+                        <span className="res-pill dim" style={{fontSize: '0.75rem', padding: '0.25rem 0.75rem'}}>{video.status}</span>
+                      )}
                     </td>
                     <td style={{padding: '1.25rem 2rem'}}>
                       <div style={{display: 'flex', gap: '0.5rem'}}>
-                        <a href={`http://localhost:5000/output/${encodeURIComponent(video.enhancedFile)}`} target="_blank" rel="noreferrer" className="btn-logout" style={{padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center'}} title="Preview">
-                          <Eye size={16} />
-                        </a>
-                        <a href={`http://localhost:5000/output/${encodeURIComponent(video.enhancedFile)}`} download className="btn-logout" style={{padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-primary)', borderColor: 'rgba(168, 85, 247, 0.3)'}} title="Download">
-                          <Download size={16} />
-                        </a>
+                        {video.status === 'Processing Complete' && (
+                          <>
+                            <a href={`http://localhost:5000/output/${encodeURIComponent(video.enhancedFile)}`} target="_blank" rel="noreferrer" className="btn-logout" style={{padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center'}} title="Preview">
+                              <Eye size={16} />
+                            </a>
+                            <a href={`http://localhost:5000/output/${encodeURIComponent(video.enhancedFile)}`} download className="btn-logout" style={{padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-primary)', borderColor: 'rgba(168, 85, 247, 0.3)'}} title="Download">
+                              <Download size={16} />
+                            </a>
+                          </>
+                        )}
                       </div>
                     </td>
                   </tr>

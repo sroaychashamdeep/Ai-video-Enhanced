@@ -43,7 +43,16 @@ export const getHistory = async () => {
     const response = await axiosClient.get('/video/history');
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'Failed to fetch history');
+    throw error.response?.data || error;
+  }
+};
+
+export const getStats = async () => {
+  try {
+    const response = await axiosClient.get('/video/stats');
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error;
   }
 };
 

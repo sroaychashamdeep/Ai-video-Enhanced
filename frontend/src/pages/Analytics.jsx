@@ -1,6 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { getStats } from '../api/axiosClient';
 import { motion } from 'framer-motion';
 import { Activity, Bell, Settings, Video, TrendingUp, Zap, Clock, HardDrive } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
@@ -18,6 +19,24 @@ const data = [
 const Analytics = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [stats, setStats] = useState({
+    totalEnhanced: 0,
+    computeHours: "0.0",
+    qualityBoost: "+0%",
+    bandwidthSaved: "0 GB"
+  });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const data = await getStats();
+        setStats(data);
+      } catch (error) {
+        console.error("Error fetching stats:", error);
+      }
+    };
+    fetchStats();
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -64,7 +83,7 @@ const Analytics = () => {
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem'}}>
               <div>
                 <div style={{color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px'}}>Total Enhanced</div>
-                <div style={{fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '0.5rem'}}>181</div>
+                <div style={{fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '0.5rem'}}>{stats.totalEnhanced}</div>
               </div>
               <div style={{background: 'rgba(168, 85, 247, 0.2)', padding: '0.75rem', borderRadius: '1rem'}}>
                 <Video size={24} color="var(--accent-primary)" />
@@ -77,7 +96,7 @@ const Analytics = () => {
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem'}}>
               <div>
                 <div style={{color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px'}}>Compute Hours</div>
-                <div style={{fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '0.5rem'}}>42.5h</div>
+                <div style={{fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '0.5rem'}}>{stats.computeHours}h</div>
               </div>
               <div style={{background: 'rgba(236, 72, 153, 0.2)', padding: '0.75rem', borderRadius: '1rem'}}>
                 <Clock size={24} color="var(--accent-secondary)" />
@@ -90,7 +109,7 @@ const Analytics = () => {
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem'}}>
               <div>
                 <div style={{color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px'}}>Quality Boost</div>
-                <div style={{fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '0.5rem'}}>+84%</div>
+                <div style={{fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '0.5rem'}}>{stats.qualityBoost}</div>
               </div>
               <div style={{background: 'rgba(59, 130, 246, 0.2)', padding: '0.75rem', borderRadius: '1rem'}}>
                 <TrendingUp size={24} color="var(--accent-tertiary)" />
@@ -103,7 +122,7 @@ const Analytics = () => {
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem'}}>
               <div>
                 <div style={{color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px'}}>Bandwidth Saved</div>
-                <div style={{fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '0.5rem'}}>14 GB</div>
+                <div style={{fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '0.5rem'}}>{stats.bandwidthSaved}</div>
               </div>
               <div style={{background: 'rgba(16, 185, 129, 0.2)', padding: '0.75rem', borderRadius: '1rem'}}>
                 <HardDrive size={24} color="var(--success-color)" />
