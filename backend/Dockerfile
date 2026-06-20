@@ -12,18 +12,18 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app/backend
 
 # Copy and install python requirements
-COPY requirements.txt .
+COPY backend/requirements.txt .
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Copy Node.js package.json and install dependencies
-COPY package*.json ./
+COPY backend/package*.json ./
 RUN npm install
 
 # Copy all backend files
-COPY . .
+COPY backend/ .
 
 # Copy ai_service to make it available for the backend
-COPY ../ai_service /app/ai_service
+COPY ai_service /app/ai_service
 
 # Expose API port
 EXPOSE 5000
