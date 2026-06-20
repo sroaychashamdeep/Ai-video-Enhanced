@@ -1,4 +1,4 @@
-FROM node:18-bullseye-slim
+FROM node:20-bullseye-slim
 
 # Install Python and dependencies required for OpenCV
 RUN apt-get update && apt-get install -y \
