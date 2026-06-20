@@ -335,7 +335,7 @@ This is an AI generated transcript.
 00:00:04,500 --&gt; 00:00:08,000
 Using Whisper model simulation.
                         </pre>
-                        <a href={`http://localhost:5000/output/${enhancedFileName.split('.')[0]}.srt`} download className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginTop: '1rem', textDecoration: 'none' }}>
+                        <a href={`/output/${enhancedFileName.split('.')[0]}.srt`} download className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginTop: '1rem', textDecoration: 'none' }}>
                           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg> Download .SRT File
                         </a>
                       </div>
@@ -345,19 +345,19 @@ Using Whisper model simulation.
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                         <div style={{ background: 'var(--bg-dark)', aspectRatio: '16/9', borderRadius: '8px', overflow: 'hidden', border: '2px solid var(--accent-primary)', position: 'relative' }}>
                           <span style={{position: 'absolute', top: '10px', left: '10px', background: 'rgba(0,0,0,0.7)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', zIndex: 10}}>Optimal Frame 1</span>
-                          <video src={`http://localhost:5000/output/${enhancedFileName}#t=1.0`} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+                          <video src={`/output/${enhancedFileName}#t=1.0`} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
                         </div>
                         <div style={{ background: 'var(--bg-dark)', aspectRatio: '16/9', borderRadius: '8px', overflow: 'hidden', position: 'relative' }}>
                           <span style={{position: 'absolute', top: '10px', left: '10px', background: 'rgba(0,0,0,0.7)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', zIndex: 10}}>Frame 2</span>
-                          <video src={`http://localhost:5000/output/${enhancedFileName}#t=3.0`} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+                          <video src={`/output/${enhancedFileName}#t=3.0`} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
                         </div>
                         <div style={{ background: 'var(--bg-dark)', aspectRatio: '16/9', borderRadius: '8px', overflow: 'hidden', position: 'relative' }}>
                           <span style={{position: 'absolute', top: '10px', left: '10px', background: 'rgba(0,0,0,0.7)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', zIndex: 10}}>Frame 3</span>
-                          <video src={`http://localhost:5000/output/${enhancedFileName}#t=5.0`} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+                          <video src={`/output/${enhancedFileName}#t=5.0`} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
                         </div>
                         <div style={{ background: 'var(--bg-dark)', aspectRatio: '16/9', borderRadius: '8px', overflow: 'hidden', position: 'relative' }}>
                           <span style={{position: 'absolute', top: '10px', left: '10px', background: 'rgba(0,0,0,0.7)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', zIndex: 10}}>Frame 4</span>
-                          <video src={`http://localhost:5000/output/${enhancedFileName}#t=7.0`} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+                          <video src={`/output/${enhancedFileName}#t=7.0`} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
                         </div>
                       </div>
                     )}
@@ -365,7 +365,7 @@ Using Whisper model simulation.
                     {activeModule === 'shorts' && (
                       <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <div style={{ width: '280px', aspectRatio: '9/16', background: 'var(--bg-dark)', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--surface-border)' }}>
-                          <video src={`http://localhost:5000/output/${enhancedFileName}`} controls style={{ width: '100%', height: '100%', objectFit: 'cover' }}></video>
+                          <video src={`/output/${enhancedFileName}`} controls style={{ width: '100%', height: '100%', objectFit: 'cover' }}></video>
                         </div>
                       </div>
                     )}
@@ -377,7 +377,7 @@ Using Whisper model simulation.
                             <motion.div key={i} style={{ width: '6px', background: 'var(--accent-primary)', borderRadius: '3px' }} animate={{ height: [10, Math.random() * 50 + 10, 10] }} transition={{ repeat: Infinity, duration: 1.5, delay: i * 0.1 }} />
                           ))}
                         </div>
-                        <a href={`http://localhost:5000/output/${enhancedFileName}`} download className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}>
+                        <a href={`/output/${enhancedFileName}`} download className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}>
                           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg> Download Clean Audio
                         </a>
                       </div>
@@ -406,7 +406,7 @@ Using Whisper model simulation.
                     {activeModule === 'bg-remove' && (
                       <div style={{ position: 'relative', borderRadius: '8px', overflow: 'hidden' }}>
                         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'repeating-linear-gradient(45deg, #1f2937 25%, transparent 25%, transparent 75%, #1f2937 75%, #1f2937), repeating-linear-gradient(45deg, #1f2937 25%, #111827 25%, #111827 75%, #1f2937 75%, #1f2937)', backgroundPosition: '0 0, 10px 10px', backgroundSize: '20px 20px', zIndex: 0 }}></div>
-                        <video src={`http://localhost:5000/output/${enhancedFileName}`} controls style={{ width: '100%', borderRadius: '8px', position: 'relative', zIndex: 1, opacity: 0.85, filter: 'contrast(1.1) brightness(1.1)' }}></video>
+                        <video src={`/output/${enhancedFileName}`} controls style={{ width: '100%', borderRadius: '8px', position: 'relative', zIndex: 1, opacity: 0.85, filter: 'contrast(1.1) brightness(1.1)' }}></video>
                         <div style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(16, 185, 129, 0.9)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.75rem', zIndex: 2, color: 'white', fontWeight: 'bold' }}>Simulated Transparency</div>
                       </div>
                     )}

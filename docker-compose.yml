@@ -12,6 +12,8 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=password
+    networks:
+      - smart-video-network
 
   redis:
     image: redis:alpine
@@ -21,14 +23,51 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    networks:
+      - smart-video-network
 
-  nginx:
-    image: nginx:latest
-    container_name: smart-video-load-balancer
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: smart-video-backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - MONGO_URI=mongodb://admin:password@mongodb:27017/smartvideo?authSource=admin
+      - JWT_SECRET=your_super_secret_jwt_key_for_production_2026
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    volumes:
+      - backend_uploads:/app/backend/uploads
+      - backend_output:/app/ai_service/output
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - smart-video-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: smart-video-frontend
+    restart: unless-stopped
     ports:
       - "80:80"
-    restart: unless-stopped
+    depends_on:
+      - backend
+    networks:
+      - smart-video-network
 
 volumes:
   mongodb_data:
   redis_data:
+  backend_uploads:
+  backend_output:
+
+networks:
+  smart-video-network:
+    driver: bridge

@@ -30,7 +30,7 @@ const VideoPreview = ({ file, enhancedFileName, settings, metadata }) => {
     
     const interval = setInterval(async () => {
       try {
-        const testUrl = `http://localhost:5000/output/${encodeURIComponent(enhancedFileName)}`;
+        const testUrl = `/output/${encodeURIComponent(enhancedFileName)}`;
         const response = await fetch(testUrl, { method: 'HEAD', cache: 'no-store' });
         if (response.ok) {
           setEnhancedVideoUrl(testUrl);
