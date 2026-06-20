@@ -50,7 +50,7 @@ io.on("connection", (socket) => {
 
 const { QueueEvents } = require("bullmq");
 const queueEvents = new QueueEvents("video-processing", {
-  connection: { host: process.env.REDIS_HOST || '127.0.0.1', port: process.env.REDIS_PORT || 6379 }
+  connection: require('./config/queue').connection
 });
 
 queueEvents.on("progress", ({ jobId, data }) => {

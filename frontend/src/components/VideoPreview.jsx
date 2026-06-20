@@ -30,7 +30,7 @@ const VideoPreview = ({ file, enhancedFileName, settings, metadata }) => {
     
     const interval = setInterval(async () => {
       try {
-        const testUrl = `/output/${encodeURIComponent(enhancedFileName)}`;
+        const testUrl = `${import.meta.env.VITE_API_URL || ''}/output/${encodeURIComponent(enhancedFileName)}`;
         const response = await fetch(testUrl, { method: 'HEAD', cache: 'no-store' });
         if (response.ok) {
           setEnhancedVideoUrl(testUrl);

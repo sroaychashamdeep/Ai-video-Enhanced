@@ -118,7 +118,7 @@ const History = () => {
                     <td style={{padding: '1.25rem 2rem'}}>
                       <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
                         <div style={{width: '80px', height: '45px', background: '#000', borderRadius: '4px', overflow: 'hidden', border: '1px solid var(--surface-border)'}}>
-                          <video src={`/output/${encodeURIComponent(video.enhancedFile)}`} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+                          <video src={`${import.meta.env.VITE_API_URL || ''}/output/${encodeURIComponent(video.enhancedFile)}`} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
                         </div>
                         <div>
                           <div style={{fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '250px'}} title={video.originalName}>{video.originalName}</div>
@@ -146,10 +146,10 @@ const History = () => {
                       <div style={{display: 'flex', gap: '0.5rem'}}>
                         {video.status === 'Processing Complete' && (
                           <>
-                            <a href={`/output/${encodeURIComponent(video.enhancedFile)}`} target="_blank" rel="noreferrer" className="btn-logout" style={{padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center'}} title="Preview">
+                            <a href={`${import.meta.env.VITE_API_URL || ''}/output/${encodeURIComponent(video.enhancedFile)}`} target="_blank" rel="noreferrer" className="btn-logout" style={{padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center'}} title="Preview">
                               <Eye size={16} />
                             </a>
-                            <a href={`/output/${encodeURIComponent(video.enhancedFile)}`} download className="btn-logout" style={{padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-primary)', borderColor: 'rgba(168, 85, 247, 0.3)'}} title="Download">
+                            <a href={`${import.meta.env.VITE_API_URL || ''}/output/${encodeURIComponent(video.enhancedFile)}`} download className="btn-logout" style={{padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-primary)', borderColor: 'rgba(168, 85, 247, 0.3)'}} title="Download">
                               <Download size={16} />
                             </a>
                           </>
