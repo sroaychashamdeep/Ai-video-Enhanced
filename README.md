@@ -1,30 +1,62 @@
-# 🚀 Smart Video Enhancer (AI Platform)
+# 🚀 Smart Video Enhancer V3.0 (AI Media Intelligence Platform)
 
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
-![Express.js](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge)
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![PyTorch](https://img.shields.io/badge/PyTorch-%23EE4C2C.svg?style=for-the-badge&logo=PyTorch&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
+![Kubernetes](https://img.shields.io/badge/kubernetes-%23326ce5.svg?style=for-the-badge&logo=kubernetes&logoColor=white)
 ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
-![Socket.io](https://img.shields.io/badge/Socket.io-black?style=for-the-badge&logo=socket.io&badgeColor=010101)
 
-A **Flagship AI Video Processing SaaS** designed to up-scale, restore, and colorize videos using state-of-the-art Deep Learning models (Real-ESRGAN, GFPGAN, RIFE). Built with an asynchronous, event-driven Node.js & BullMQ backend, connected to a stunning Glassmorphism React frontend over WebSockets.
+An **Enterprise-Grade AI Media Intelligence Platform** demonstrating Full-Stack Engineering, MLOps, Cloud-Native deployment, and advanced Deep Learning pipelines. V3.0 expands the core upscaler into an 8-module suite featuring AutoML, Model Marketplaces, A/B Testing, and Developer APIs.
 
 ---
 
-## ✨ Features
+## 🏗 Enterprise Cloud Architecture
 
-- **Production-Grade Async Pipeline**: Upload massive 4K videos without crashing the server. Videos are processed entirely in the background using **BullMQ + Redis**.
-- **Real-Time Progress Streaming**: Watch the AI Neural Engine work frame-by-frame live on your dashboard via **Socket.IO**.
-- **Interactive UI**: A premium dark-mode, glassmorphic UI styled for enterprise AI platforms (similar to RunwayML, Topaz Labs). Features an interactive Before/After comparison slider.
-- **Deep Learning Suite Integration**:
-  - `Real-ESRGAN` for 4x Video Upscaling
-  - `GFPGAN` for AI Face Restoration
-  - `RIFE` for 60fps Frame Interpolation
-  - `DeOldify` for Black & White Video Colorization
-  - `OpenAI Whisper` for accurate transcriptions
-- **Analytics Dashboard**: Tracks usage statistics, compute hours, and total GBs saved directly from **MongoDB**.
+```mermaid
+graph TD
+    subgraph Frontend [React Web Client]
+        UI[UI Components] --> Store[State Management]
+        Store --> WS[WebSocket Client]
+        Store --> REST[REST Client]
+    end
+
+    subgraph K8s [Kubernetes Cluster]
+        subgraph Ingress [Nginx Ingress / API Gateway]
+            REST --> ApiGate[API Gateway]
+            WS --> ApiGate
+        end
+
+        subgraph NodeBackend [Node.js Microservices]
+            ApiGate --> Auth[Auth Service]
+            ApiGate --> JobMan[Job Manager]
+            ApiGate --> WebSock[WebSocket Server]
+            JobMan --> BullMQ[BullMQ Producer]
+        end
+
+        subgraph Storage [Databases]
+            Auth --> Mongo[(MongoDB Users)]
+            JobMan --> Mongo[(MongoDB Jobs)]
+            BullMQ --> Redis[(Redis ElastiCache)]
+        end
+
+        subgraph PythonWorkers [A100 GPU Node Group]
+            Redis --> Worker1[Worker: Upscale / ESRGAN]
+            Redis --> Worker2[Worker: NLP / Whisper]
+            Worker1 --> S3[(AWS S3 Out)]
+            Worker2 --> S3
+        end
+    end
+```
+
+## ✨ Major V3.0 Features
+
+- **AI Media Suite**: 8 distinct tools including Video Enhancement, AI Subtitles, Voice Isolation, Scene Intelligence, and Background Removal.
+- **MLOps & A/B Testing**: Track experiment loss metrics, evaluate longitudinal training charts, and visually compare Models A/B side-by-side.
+- **AutoML Copilot**: An intelligent agent that pre-analyzes metadata/blur/lighting to recommend the perfect pipeline and estimate GPU processing time.
+- **Developer API Portal**: Secure JWT endpoint authentication, API key generation, and rate-limiting dashboards.
+- **Enterprise RBAC**: Administrator panel with Role-Based Access Control and a live security Audit Log.
+- **Infrastructure Monitoring**: Grafana/Prometheus styled live UI charting simulated cluster CPU, GPU VRAM, and Redis Job Queues.
 
 ## 🏗️ Architecture Stack
 

@@ -11,6 +11,39 @@ const { videoQueue } = require("../config/queue");
 const Video = require("../models/Video");
 const User = require("../models/User");
 
+const { spawn } = require('child_process');
+
+router.post(
+  "/analyze",
+  upload.single("video"),
+  (req, res) => {
+    if (!req.file) {
+      return res.status(400).json({ message: "No video file uploaded" });
+    }
+
+    const inputPath = req.file.path;
+    const pythonExe = process.platform === "win32" ? path.join(__dirname, "../../venv/Scripts/python.exe") : "python3";
+    const pythonScript = path.join(__dirname, "../../ai_service/analyzer.py");
+
+    const pyProcess = spawn(pythonExe, ["-u", pythonScript, "-i", inputPath]);
+    let outputData = "";
+
+    pyProcess.stdout.on("data", (data) => {
+      outputData += data.toString();
+    });
+
+    pyProcess.on("close", (code) => {
+      try {
+        const jsonResult = JSON.parse(outputData);
+        res.json(jsonResult);
+      } catch (e) {
+        console.error("Analyzer parsing error:", e, "Output:", outputData);
+        res.status(500).json({ message: "Failed to parse analysis results" });
+      }
+    });
+  }
+);
+
 router.post(
   "/upload",
   upload.single("video"),
@@ -71,7 +104,8 @@ router.post(
           videoId: newVideo._id,
           inputPath,
           outputPath,
-          qualitySettings
+          qualitySettings,
+          moduleId: req.body.moduleId || 'enhance'
         });
 
         // Update with actual BullMQ jobId

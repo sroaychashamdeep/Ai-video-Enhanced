@@ -6,6 +6,17 @@ import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import History from './pages/History';
 import Analytics from './pages/Analytics';
+import Monitoring from './pages/Monitoring';
+import AdminPanel from './pages/AdminPanel';
+import ModelTraining from './pages/ModelTraining';
+import ContentStudio from './pages/ContentStudio';
+import Marketplace from './pages/Marketplace';
+import MLOps from './pages/MLOps';
+import ABTesting from './pages/ABTesting';
+import Research from './pages/Research';
+import DeveloperPortal from './pages/DeveloperPortal';
+import Footer from './components/Footer';
+import AICopilot from './components/AICopilot';
 import './App.css';
 
 const ProtectedRoute = ({ children }) => {
@@ -21,7 +32,7 @@ function App() {
   const { user } = useContext(AuthContext);
 
   return (
-    <>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <div className="ambient-orb orb-1"></div>
       <div className="ambient-orb orb-2"></div>
       <div className="ambient-orb orb-3"></div>
@@ -53,8 +64,82 @@ function App() {
             </ProtectedRoute>
           } 
         />
+        <Route 
+          path="/monitoring" 
+          element={
+            <ProtectedRoute>
+              <Monitoring />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/admin" 
+          element={
+            <ProtectedRoute>
+              <AdminPanel />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/training" 
+          element={
+            <ProtectedRoute>
+              <ModelTraining />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/content" 
+          element={
+            <ProtectedRoute>
+              <ContentStudio />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/marketplace" 
+          element={
+            <ProtectedRoute>
+              <Marketplace />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/mlops" 
+          element={
+            <ProtectedRoute>
+              <MLOps />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/abtesting" 
+          element={
+            <ProtectedRoute>
+              <ABTesting />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/research" 
+          element={
+            <ProtectedRoute>
+              <Research />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/developer" 
+          element={
+            <ProtectedRoute>
+              <DeveloperPortal />
+            </ProtectedRoute>
+          } 
+        />
       </Routes>
-    </>
+      <AICopilot />
+      <Footer />
+    </div>
   );
 }
 

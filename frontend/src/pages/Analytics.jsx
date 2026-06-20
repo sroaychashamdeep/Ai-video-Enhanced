@@ -82,53 +82,53 @@ const Analytics = () => {
           <motion.div className="upload-card" style={{padding: '1.5rem'}} initial={{opacity: 0, y: 20}} animate={{opacity: 1, y: 0}}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem'}}>
               <div>
-                <div style={{color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px'}}>Total Enhanced</div>
-                <div style={{fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '0.5rem'}}>{stats.totalEnhanced}</div>
+                <div style={{color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px'}}>Monthly Revenue</div>
+                <div style={{fontSize: '2.5rem', fontWeight: 800, color: '#10b981', marginTop: '0.5rem'}}>$42,500</div>
               </div>
-              <div style={{background: 'rgba(168, 85, 247, 0.2)', padding: '0.75rem', borderRadius: '1rem'}}>
-                <Video size={24} color="var(--accent-primary)" />
+              <div style={{background: 'rgba(16, 185, 129, 0.2)', padding: '0.75rem', borderRadius: '1rem'}}>
+                <Activity size={24} color="#10b981" />
               </div>
             </div>
-            <div style={{color: 'var(--success-color)', fontSize: '0.85rem', fontWeight: 600}}>+24% from last week</div>
+            <div style={{color: 'var(--success-color)', fontSize: '0.85rem', fontWeight: 600}}>+18% from last month</div>
           </motion.div>
 
           <motion.div className="upload-card" style={{padding: '1.5rem'}} initial={{opacity: 0, y: 20}} animate={{opacity: 1, y: 0}} transition={{delay: 0.1}}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem'}}>
               <div>
-                <div style={{color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px'}}>Compute Hours</div>
-                <div style={{fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '0.5rem'}}>{stats.computeHours}h</div>
+                <div style={{color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px'}}>Active Subscriptions</div>
+                <div style={{fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '0.5rem'}}>1,248</div>
               </div>
               <div style={{background: 'rgba(236, 72, 153, 0.2)', padding: '0.75rem', borderRadius: '1rem'}}>
-                <Clock size={24} color="var(--accent-secondary)" />
+                <Activity size={24} color="var(--accent-secondary)" />
               </div>
             </div>
-            <div style={{color: 'var(--text-muted)', fontSize: '0.85rem'}}>A100 GPU Cluster Time</div>
+            <div style={{color: 'var(--success-color)', fontSize: '0.85rem', fontWeight: 600}}>+54 new this week</div>
           </motion.div>
 
           <motion.div className="upload-card" style={{padding: '1.5rem'}} initial={{opacity: 0, y: 20}} animate={{opacity: 1, y: 0}} transition={{delay: 0.2}}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem'}}>
               <div>
-                <div style={{color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px'}}>Quality Boost</div>
-                <div style={{fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '0.5rem'}}>{stats.qualityBoost}</div>
+                <div style={{color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px'}}>Compute Hours</div>
+                <div style={{fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '0.5rem'}}>{stats.computeHours}h</div>
               </div>
               <div style={{background: 'rgba(59, 130, 246, 0.2)', padding: '0.75rem', borderRadius: '1rem'}}>
-                <TrendingUp size={24} color="var(--accent-tertiary)" />
+                <Clock size={24} color="var(--accent-tertiary)" />
               </div>
             </div>
-            <div style={{color: 'var(--text-muted)', fontSize: '0.85rem'}}>Average sharpness increase</div>
+            <div style={{color: '#eab308', fontSize: '0.85rem', fontWeight: 600}}>A100 GPU Cluster Time</div>
           </motion.div>
 
           <motion.div className="upload-card" style={{padding: '1.5rem'}} initial={{opacity: 0, y: 20}} animate={{opacity: 1, y: 0}} transition={{delay: 0.3}}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem'}}>
               <div>
-                <div style={{color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px'}}>Bandwidth Saved</div>
-                <div style={{fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '0.5rem'}}>{stats.bandwidthSaved}</div>
+                <div style={{color: 'var(--text-secondary)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px'}}>Cloud Storage</div>
+                <div style={{fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '0.5rem'}}>14.2 TB</div>
               </div>
-              <div style={{background: 'rgba(16, 185, 129, 0.2)', padding: '0.75rem', borderRadius: '1rem'}}>
-                <HardDrive size={24} color="var(--success-color)" />
+              <div style={{background: 'rgba(168, 85, 247, 0.2)', padding: '0.75rem', borderRadius: '1rem'}}>
+                <HardDrive size={24} color="var(--accent-primary)" />
               </div>
             </div>
-            <div style={{color: 'var(--success-color)', fontSize: '0.85rem', fontWeight: 600}}>AI Compression Engine active</div>
+            <div style={{color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 600}}>Across AWS S3 regions</div>
           </motion.div>
         </div>
 

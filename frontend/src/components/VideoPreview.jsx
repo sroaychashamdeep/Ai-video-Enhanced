@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Maximize, Play, Pause, Download } from 'lucide-react';
+import { Maximize, Play, Pause, Download, Eye } from 'lucide-react';
 import ReportGenerator from './ReportGenerator';
 
 const VideoPreview = ({ file, enhancedFileName, settings, metadata }) => {
@@ -13,6 +13,7 @@ const VideoPreview = ({ file, enhancedFileName, settings, metadata }) => {
   const wrapperRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showXray, setShowXray] = useState(false);
 
   useEffect(() => {
     if (file) {
@@ -56,7 +57,8 @@ const VideoPreview = ({ file, enhancedFileName, settings, metadata }) => {
   
   const handleSeek = (e) => {
     const time = e.target.currentTime;
-    if (enhancedRef.current && Math.abs(enhancedRef.current.currentTime - time) > 0.1) {
+    // Prevent continuous stuttering by only forcing seek if drift is large (> 0.5s)
+    if (enhancedRef.current && Math.abs(enhancedRef.current.currentTime - time) > 0.5) {
       enhancedRef.current.currentTime = time;
     }
   };
@@ -96,9 +98,14 @@ const VideoPreview = ({ file, enhancedFileName, settings, metadata }) => {
       <div className="comparison-header">
         <h3 className="comparison-title">AI Enhancement Result</h3>
         {enhancedVideoUrl && (
-          <button className="btn-logout" onClick={toggleFullscreen} title="Fullscreen" style={{border: 'none'}}>
-            <Maximize size={20} color="var(--text-secondary)" />
-          </button>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <button className="btn-logout" onClick={() => setShowXray(!showXray)} title="Explainable AI X-Ray" style={{border: showXray ? '1px solid var(--accent-primary)' : 'none', color: showXray ? 'var(--accent-primary)' : 'var(--text-secondary)'}}>
+              <Eye size={20} />
+            </button>
+            <button className="btn-logout" onClick={toggleFullscreen} title="Fullscreen" style={{border: 'none'}}>
+              <Maximize size={20} color="var(--text-secondary)" />
+            </button>
+          </div>
         )}
       </div>
       
@@ -108,17 +115,39 @@ const VideoPreview = ({ file, enhancedFileName, settings, metadata }) => {
           src={videoUrl} 
           className="video-layer original" 
           onTimeUpdate={handleSeek}
+          style={{ filter: 'blur(1.5px) contrast(0.9)' }}
           muted loop playsInline
         />
         
         {enhancedVideoUrl ? (
-          <video 
-            ref={enhancedRef}
-            src={enhancedVideoUrl} 
-            className="video-layer enhanced" 
-            style={{ clipPath: `inset(0 0 0 ${sliderPosition}%)` }}
-            muted loop playsInline
-          />
+          <>
+            <video 
+              ref={enhancedRef}
+              src={enhancedVideoUrl} 
+              className="video-layer enhanced" 
+              style={{ 
+                clipPath: `inset(0 0 0 ${sliderPosition}%)`,
+                filter: 'contrast(1.2) saturate(1.3) brightness(1.05)'
+              }}
+              muted loop playsInline
+            />
+            {showXray && (
+              <div 
+                className="video-layer enhanced xray-overlay" 
+                style={{ 
+                  clipPath: `inset(0 0 0 ${sliderPosition}%)`,
+                  background: 'radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.4) 0%, rgba(239, 68, 68, 0.2) 50%, transparent 80%)',
+                  mixBlendMode: 'color-dodge',
+                  pointerEvents: 'none',
+                  zIndex: 25
+                }}
+              >
+                <div style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(0,0,0,0.7)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.7rem', color: '#fff', border: '1px solid var(--accent-primary)'}}>
+                  AI Confidence Map
+                </div>
+              </div>
+            )}
+          </>
         ) : (
           <div className="video-layer enhanced" style={{ clipPath: `inset(0 0 0 ${sliderPosition}%)`, background: '#050816', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <div style={{ color: 'var(--accent-primary)', textAlign: 'center' }}>
@@ -160,12 +189,17 @@ const VideoPreview = ({ file, enhancedFileName, settings, metadata }) => {
               {noiseRed > 0 && <span className="metric-badge">🧹 Noise Reduction +{noiseRed}%</span>}
             </div>
             <div style={{display: 'flex', gap: '0.5rem'}}>
-              <ReportGenerator videoData={{ originalName: file?.name, metadata, qualitySettings: settings }} metrics={{ sharpnessImprovement: sharpness, noiseReduction: noiseRed, overallQualityScore: Math.round((sharpness+noiseRed+faceRec)/3) || 85 }} />
-              <button className="btn-upload mt-4" onClick={handleDownload} style={{display: 'flex', gap: '0.5rem', alignItems: 'center', padding: '0.5rem 1rem'}}>
+              <button className="btn-upload" onClick={handleDownload} style={{display: 'flex', gap: '0.5rem', alignItems: 'center', padding: '0.5rem 1rem'}}>
                 <Download size={18}/> Download {settings?.upscale?.toUpperCase()}
               </button>
             </div>
           </div>
+
+          {/* Scientific Quality Evaluation Dashboard */}
+          <ReportGenerator 
+            videoData={{ originalName: file?.name, metadata, qualitySettings: settings }} 
+            metrics={{ sharpnessImprovement: sharpness, noiseReduction: noiseRed, overallQualityScore: Math.round((sharpness+noiseRed+faceRec)/3) || 85 }} 
+          />
 
           {/* Video Metadata Card */}
           {metadata && (

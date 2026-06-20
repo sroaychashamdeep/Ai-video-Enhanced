@@ -90,7 +90,7 @@ const Login = () => {
           </button>
         </form>
 
-        <div style={{display: 'flex', alignItems: 'center', margin: '2rem 0', color: 'var(--text-muted)'}}>
+        <div style={{display: 'flex', alignItems: 'center', margin: '2rem 0', color: '#e2e8f0'}}>
           <div style={{flex: 1, height: '1px', background: 'var(--surface-border)'}}></div>
           <span style={{padding: '0 1rem', fontSize: '0.9rem'}}>Or continue with</span>
           <div style={{flex: 1, height: '1px', background: 'var(--surface-border)'}}></div>

@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smart-video-backend
+  namespace: ai-platform
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: smart-video-backend
+  template:
+    metadata:
+      labels:
+        app: smart-video-backend
+    spec:
+      containers:
+      - name: node-api
+        image: acmecorp/smart-video-backend:v3.0.0
+        ports:
+        - containerPort: 3000
+        env:
+        - name: REDIS_URL
+          value: "redis://redis-cluster:6379"
+        - name: MONGO_URI
+          valueFrom:
+            secretKeyRef:
+              name: db-secrets
+              key: mongo-uri
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "1Gi"
+          limits:
+            cpu: "2000m"
+            memory: "4Gi"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-worker-gpu
+  namespace: ai-platform
+spec:
+  replicas: 5 # Horizontally scales based on BullMQ length
+  selector:
+    matchLabels:
+      app: ai-worker-gpu
+  template:
+    metadata:
+      labels:
+        app: ai-worker-gpu
+    spec:
+      containers:
+      - name: pytorch-engine
+        image: acmecorp/smart-video-ai-worker:v3.0.0
+        resources:
+          limits:
+            nvidia.com/gpu: 1 # Assigns 1 physical GPU per pod

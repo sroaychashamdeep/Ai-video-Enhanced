@@ -47,10 +47,10 @@ const UploadArea = ({ onFileSelect }) => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
         </svg>
       </div>
-      <h3 className="upload-title">Drag & Drop Video File</h3>
-      <p className="upload-subtitle">or click to browse from your computer</p>
+      <h3 className="upload-title" style={{ color: '#f8fafc' }}>Drag & Drop Video File</h3>
+      <p className="upload-subtitle" style={{ color: '#cbd5e1' }}>or click to browse from your computer</p>
       
-      <div className="upload-specs">
+      <div className="upload-specs" style={{ color: '#94a3b8' }}>
         <span>Supported: MP4, MOV, AVI</span>
         <span>•</span>
         <span>Max Size: 500MB</span>

@@ -121,7 +121,7 @@ const Signup = () => {
           </button>
         </form>
 
-        <div style={{display: 'flex', alignItems: 'center', margin: '1.5rem 0', color: 'var(--text-muted)'}}>
+        <div style={{display: 'flex', alignItems: 'center', margin: '1.5rem 0', color: '#e2e8f0'}}>
           <div style={{flex: 1, height: '1px', background: 'var(--surface-border)'}}></div>
           <span style={{padding: '0 1rem', fontSize: '0.9rem'}}>Or sign up with</span>
           <div style={{flex: 1, height: '1px', background: 'var(--surface-border)'}}></div>

@@ -100,19 +100,19 @@ const ProgressIndicator = ({ progress, status, file, aiSettings }) => {
 
       {/* Live Stats */}
       <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '1rem', borderTop: '1px solid var(--surface-border)', paddingTop: '1.5rem'}}>
-        <div style={{display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-secondary)'}}>
+        <div style={{display: 'flex', alignItems: 'center', gap: '0.75rem'}}>
           <Cpu size={24} color="var(--accent-primary)" />
           <div>
-            <div style={{fontSize: '0.75rem', textTransform: 'uppercase'}}>GPU Status</div>
-            <div style={{fontWeight: 600, color: 'var(--text-primary)'}}>{status === 'Processing Complete' ? 'Idle' : 'RTX 4090 - 98%'}</div>
+            <div style={{fontSize: '0.75rem', textTransform: 'uppercase', color: '#cbd5e1'}}>GPU Status</div>
+            <div style={{fontWeight: 600, color: '#f8fafc'}}>{status === 'Processing Complete' ? 'Idle' : 'RTX 4090 - 98%'}</div>
           </div>
         </div>
         
-        <div style={{display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-secondary)'}}>
+        <div style={{display: 'flex', alignItems: 'center', gap: '0.75rem'}}>
           <Clock size={24} color="var(--accent-secondary)" />
           <div>
-            <div style={{fontSize: '0.75rem', textTransform: 'uppercase'}}>Time Remaining</div>
-            <div style={{fontWeight: 600, color: 'var(--text-primary)'}}>
+            <div style={{fontSize: '0.75rem', textTransform: 'uppercase', color: '#cbd5e1'}}>Time Remaining</div>
+            <div style={{fontWeight: 600, color: '#f8fafc'}}>
               {status === 'Processing Complete' 
                 ? `Finished in ${Math.floor(timeElapsed / 60)}:${(timeElapsed % 60).toString().padStart(2, '0')}`
                 : isCalculating 
@@ -123,19 +123,19 @@ const ProgressIndicator = ({ progress, status, file, aiSettings }) => {
           </div>
         </div>
 
-        <div style={{display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-secondary)'}}>
+        <div style={{display: 'flex', alignItems: 'center', gap: '0.75rem'}}>
           <HardDrive size={24} color="var(--accent-tertiary)" />
           <div>
-            <div style={{fontSize: '0.75rem', textTransform: 'uppercase'}}>VRAM Usage</div>
-            <div style={{fontWeight: 600, color: 'var(--text-primary)'}}>{status === 'Processing Complete' ? '1.2 GB' : '18.4 GB / 24 GB'}</div>
+            <div style={{fontSize: '0.75rem', textTransform: 'uppercase', color: '#cbd5e1'}}>VRAM Usage</div>
+            <div style={{fontWeight: 600, color: '#f8fafc'}}>{status === 'Processing Complete' ? '1.2 GB' : '18.4 GB / 24 GB'}</div>
           </div>
         </div>
 
-        <div style={{display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-secondary)'}}>
+        <div style={{display: 'flex', alignItems: 'center', gap: '0.75rem'}}>
           <ShieldCheck size={24} color="var(--success-color)" />
           <div>
-            <div style={{fontSize: '0.75rem', textTransform: 'uppercase'}}>Current Stage</div>
-            <div style={{fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}} title={status}>{status}</div>
+            <div style={{fontSize: '0.75rem', textTransform: 'uppercase', color: '#cbd5e1'}}>Current Stage</div>
+            <div style={{fontWeight: 600, color: '#f8fafc', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}} title={status}>{status}</div>
           </div>
         </div>
       </div>

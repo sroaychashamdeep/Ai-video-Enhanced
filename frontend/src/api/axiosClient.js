@@ -12,10 +12,11 @@ axiosClient.interceptors.request.use((config) => {
   return config;
 });
 
-export const uploadVideo = async (file, quality) => {
+export const uploadVideo = async (file, quality, moduleId = 'enhance') => {
   const formData = new FormData();
   formData.append('video', file);
   formData.append('quality', quality);
+  formData.append('moduleId', moduleId);
 
   try {
     const response = await axiosClient.post('/video/upload', formData, {
@@ -26,6 +27,22 @@ export const uploadVideo = async (file, quality) => {
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Upload failed');
+  }
+};
+
+export const analyzeVideo = async (file) => {
+  const formData = new FormData();
+  formData.append('video', file);
+
+  try {
+    const response = await axiosClient.post('/video/analyze', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Analysis failed');
   }
 };
 
