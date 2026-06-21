@@ -4,7 +4,7 @@ const path = require('path');
 const { connection } = require('../config/queue');
 const Video = require('../models/Video');
 
-const pythonExe = path.join(__dirname, "../../.venv/Scripts/python.exe");
+const pythonExe = process.env.PYTHON_PATH || (process.platform === 'win32' ? path.join(__dirname, "../../.venv/Scripts/python.exe") : 'python3');
 const pythonScript = path.join(__dirname, "../../ai_service/enhance.py");
 
 const videoWorker = new Worker('video-processing', async (job) => {
